@@ -3,11 +3,11 @@ import UIKit
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - IBOutlets
-    @IBOutlet private var imageView: UIImageView!
-    @IBOutlet private var textLabel: UILabel!
-    @IBOutlet private var counterLabel: UILabel!
-    @IBOutlet weak var noButton: UIButton!
-    @IBOutlet weak var yesButton: UIButton!
+    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var textLabel: UILabel!
+    @IBOutlet private weak var counterLabel: UILabel!
+    @IBOutlet private weak var noButton: UIButton!
+    @IBOutlet private weak var yesButton: UIButton!
     
     // MARK: - Properties
     private var correctAnswers = 0
@@ -20,34 +20,21 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     // MARK: - Actions
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        guard let currentQuestion = currentQuestion else { return }
-        let givenAnswer = false
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-        
-        noButton.isEnabled = false
-        yesButton.isEnabled = false
+        checkAnswer(false)
+        setupButtonsEnabled(false)
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        guard let currentQuestion = currentQuestion else { return }
-        let givenAnswer = true
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-        
-        noButton.isEnabled = false
-        yesButton.isEnabled = false
+        checkAnswer(true)
+        setupButtonsEnabled(false)
     }
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = 20
-        
-        questionFactory = QuestionFactory()
-        questionFactory?.delegate = self
-        questionFactory?.requestNextQuestion()
-        
-        statisticService = StatisticService()
+        setupUI()
+        setupQuestionfacory()
+        setupStatiscticService()
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -61,6 +48,33 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     
     // MARK: - Private Methods
+    private func setupUI() {
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = 20
+    }
+    
+    private func setupQuestionfacory() {
+        questionFactory = QuestionFactory()
+        questionFactory?.delegate = self
+        questionFactory?.requestNextQuestion()
+    }
+    
+    private func setupStatiscticService() {
+        statisticService = StatisticService()
+    }
+    
+    private func setupButtonsEnabled(_ isEnabled: Bool) {
+        noButton.isEnabled = isEnabled
+        yesButton.isEnabled = isEnabled
+    }
+    
+    private func checkAnswer(_ givenAnswer: Bool) {
+        guard let currentQuestion = currentQuestion else {return}
+        
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+        setupButtonsEnabled(false)
+    }
+    
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(
             image: UIImage(named: model.image) ?? UIImage(),
@@ -142,7 +156,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             questionFactory?.requestNextQuestion()
         }
         
-        noButton.isEnabled = true
-        yesButton.isEnabled = true
+        setupButtonsEnabled(true)
     }
 }
