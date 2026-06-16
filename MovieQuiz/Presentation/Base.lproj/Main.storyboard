@@ -38,14 +38,14 @@
                                         </subviews>
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="irM-ET-zFk" userLabel="Preview Image">
-                                        <rect key="frame" x="9.3333333333333428" y="43.333333333333371" width="334.66666666666663" height="502"/>
+                                        <rect key="frame" x="12.333333333333343" y="43.333333333333343" width="328.33333333333326" height="492.66666666666663"/>
                                         <color key="backgroundColor" name="YP White (iOS)"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="irM-ET-zFk" secondAttribute="height" multiplier="2:3" id="OIg-r3-GHO"/>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Рейтинг этого фильма меньше, чем 5?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="18Q-US-D7M" userLabel="Question Label">
-                                        <rect key="frame" x="3.6666666666666572" y="565.33333333333337" width="346" height="10.666666666666629"/>
+                                        <rect key="frame" x="3.6666666666666572" y="556" width="346" height="20"/>
                                         <fontDescription key="fontDescription" name="YSDisplay-Bold" family="YS Display" pointSize="23"/>
                                         <color key="textColor" name="YP White (iOS)"/>
                                         <nil key="highlightedColor"/>
@@ -95,17 +95,23 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="rlc-kO-Qg8">
+                                <rect key="frame" x="186.66666666666666" y="416" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Black (iOS)"/>
                         <constraints>
+                            <constraint firstItem="rlc-kO-Qg8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="DuK-Gb-S4V"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="mJ0-kL-fpe" secondAttribute="bottom" id="GWz-V4-gr4"/>
                             <constraint firstItem="mJ0-kL-fpe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="OPD-65-Q2Q"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mJ0-kL-fpe" secondAttribute="trailing" constant="20" id="Qob-X7-UJx"/>
+                            <constraint firstItem="rlc-kO-Qg8" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="oxi-LF-nYH"/>
                             <constraint firstItem="mJ0-kL-fpe" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10.000000000000028" id="rBm-P6-oia"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="rlc-kO-Qg8" id="xk6-nv-ctN"/>
                         <outlet property="counterLabel" destination="dzK-vd-kFP" id="9Y7-hA-jwz"/>
                         <outlet property="imageView" destination="irM-ET-zFk" id="IeG-Vq-nNb"/>
                         <outlet property="noButton" destination="4Cl-0k-vHx" id="13r-cW-Z50"/>
