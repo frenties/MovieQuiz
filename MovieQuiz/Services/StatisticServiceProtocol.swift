@@ -6,5 +6,4 @@ protocol StatisticServiceProtocol {
     var totalAccuracy: Double { get }
     
     func store(newResult: GameResult)
-    
 }
