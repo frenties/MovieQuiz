@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol {
     
     // MARK: - IBOutlets
     @IBOutlet private weak var imageView: UIImageView!
@@ -13,7 +13,6 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Properties
     private var presenter:MovieQuizPresenter!
     private var alertPresenter = AlertPresenter()
-    private var statisticService: StatisticServiceProtocol?
     
     // MARK: - Actions
     @IBAction private func noButtonClicked(_ sender: UIButton) {
@@ -27,10 +26,9 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-   presenter = MovieQuizPresenter(viewController: self)
+        presenter = MovieQuizPresenter(viewController: self)
         
         setupUI()
-        setupStatiscticService()
     }
     
     // MARK: - Private Methods
@@ -38,10 +36,6 @@ final class MovieQuizViewController: UIViewController {
         showLoadingIndicator()
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 20
-    }
-    
-    private func setupStatiscticService() {
-        statisticService = StatisticService()
     }
     
     func setupButtonsEnabled(_ isEnabled: Bool) {
@@ -52,6 +46,8 @@ final class MovieQuizViewController: UIViewController {
     func show(quiz step: QuizStepViewModel) {
         hideLoadingIndicator()
         
+        imageView.layer.borderWidth = 0
+        
         imageView.image = UIImage(data:step.image) ?? UIImage()
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
@@ -60,43 +56,15 @@ final class MovieQuizViewController: UIViewController {
     }
     
     func show(quiz result:QuizResultsViewModel) {
-        guard let statisticService = statisticService else { return }
-        
-        let currentGameResult = GameResult(correct: presenter.correctAnswers,
-                                           total: presenter.questionsAmount,
-                                           date: Date()
-        )
-        
-        statisticService.store(newResult: currentGameResult)
-        
-        let gamesCount = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-        let bestGameResult = "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))"
-        
-        let averrageAccuracy = "Средняя точность:\(String(format: "%.2f", statisticService.totalAccuracy))%"
-        
-        let model = AlertModel(title: result.title,
-                               message: "\(result.text) \n \(gamesCount) \n  \(bestGameResult) \n \(averrageAccuracy)",
-                               buttonText: result.buttonText
+        let model = AlertModel(
+            title: result.title,
+            message: result.text,
+            buttonText: result.buttonText
         ) { [weak self] in
-            guard let self = self else {return}
+            guard let self = self else { return }
             self.presenter.restartGame()
         }
         alertPresenter.showAlert(on: self, model: model)
-    }
-    
-    func showAnswerResult(isCorrect: Bool) {
-        imageView.layer.masksToBounds = true
-        imageView.layer.borderWidth = 8
-        imageView.layer.cornerRadius = 20
-        imageView.layer.borderColor = isCorrect ? UIColor.ypGreenIOS.cgColor : UIColor.ypRedIOS.cgColor
-        
-        presenter.didAnswer(isCorrectAnswer: isCorrect)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else { return }
-            self.imageView.layer.borderWidth = 0
-            self.presenter.showNextQuestionOrResults()
-        }
     }
     
     func showLoadingIndicator() {
@@ -122,5 +90,11 @@ final class MovieQuizViewController: UIViewController {
             self.presenter.restartGame()
         }
         alertPresenter.showAlert(on: self, model: model)
+    }
+    
+    func highlightImageBorder(isCorrectAnswer: Bool) {
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
+        imageView.layer.borderColor = isCorrectAnswer ? UIColor.ypGreenIOS.cgColor : UIColor.ypRedIOS.cgColor
     }
 }
