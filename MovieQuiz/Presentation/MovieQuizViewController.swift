@@ -12,8 +12,6 @@ final class MovieQuizViewController: UIViewController {
     
     // MARK: - Properties
     private var presenter:MovieQuizPresenter!
-    private var questionFactory: QuestionFactoryProtocol?
-    private var currentQuestion: QuizQuestion?
     private var alertPresenter = AlertPresenter()
     private var statisticService: StatisticServiceProtocol?
     
@@ -33,11 +31,6 @@ final class MovieQuizViewController: UIViewController {
         
         setupUI()
         setupStatiscticService()
-    }
-    
-    // MARK: - QuestionFactoryDelegate
-    func didReceiveNextQuestion(question: QuizQuestion?) {
-        presenter.didReceiveNextQuestion(question: question)
     }
     
     // MARK: - Private Methods
@@ -126,7 +119,7 @@ final class MovieQuizViewController: UIViewController {
             guard let self = self else {return}
             
             self.showLoadingIndicator()
-            self.questionFactory?.loadData()
+            self.presenter.restartGame()
         }
         alertPresenter.showAlert(on: self, model: model)
     }

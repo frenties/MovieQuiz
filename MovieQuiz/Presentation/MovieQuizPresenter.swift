@@ -104,7 +104,9 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     func didFailToLoadData(with error: any Error) {
         let message = error.localizedDescription
-        viewController?.showNetworkError(message: message)
+        DispatchQueue.main.async { [weak self] in
+            self?.viewController?.showNetworkError(message: message)
+        }
     }
     
     
