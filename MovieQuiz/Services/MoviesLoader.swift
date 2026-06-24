@@ -4,9 +4,13 @@ protocol MoviesLoading {
     func loadMovies(handler: @escaping (Result<MostPopularMovies, any Error>) -> Void)
 }
 
-struct MoviesLoader:MoviesLoading {
+struct MoviesLoader: MoviesLoading {
     // MARK: - NetworkClient
-    private let networkClient = NetworkClient()
+    private let networkClient: NetworkRouting
+    
+    init(networkClient:NetworkRouting = NetworkClient()) {
+        self.networkClient = networkClient
+    }
     
     // MARK: - URL
     private var top250MoviesUrl: URL {
