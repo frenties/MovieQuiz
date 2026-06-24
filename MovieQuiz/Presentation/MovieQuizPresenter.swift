@@ -1,7 +1,7 @@
 import Foundation
 
 struct QuizStepViewModel {
-    let image: Data
+    let imageData: Data
     let question: String
     let questionNumber: String
 }
@@ -24,7 +24,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     // MARK: - Properties
     
-    private let statisticService: StatisticServiceProtocol!
+    private let statisticService: StatisticServiceProtocol
     var questionFactory: QuestionFactoryProtocol?
     private weak var viewController: MovieQuizViewControllerProtocol?
     let questionsAmount: Int = 10
@@ -48,7 +48,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     // MARK: - QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else { return }
+        guard let question else { return }
         
         currentQuestion = question
         let viewModel = convert(model: question)
@@ -76,7 +76,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(
-            image: model.image,
+            imageData: model.image,
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
@@ -91,7 +91,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func proceedToNextQuestionOrResults() {
-        if self.isLastQuestion() {
+        if isLastQuestion() {
             let text = makeResultsMessage()
             
             let viewModel = QuizResultsViewModel (
@@ -139,14 +139,12 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         
         let bestGame = statisticService.bestGame
         
-        let totalPlaysCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
-        let currentGameResultLine = "Ваш результат: \(correctAnswers)/\(questionsAmount)"
-        let bestGameInfoLine = "Рекорд: \(bestGame.correct)/\(bestGame.total) (\(bestGame.date.dateTimeString))"
-        let averageAccuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
-        
-        let resultMessage = [
-            currentGameResultLine, totalPlaysCountLine, bestGameInfoLine, averageAccuracyLine
-        ].joined(separator: "\n")
+        let resultMessage = """
+            Количество сыгранных квизов: \(statisticService.gamesCount)
+            Ваш результат: \(correctAnswers)/\(questionsAmount)
+            Рекорд: \(bestGame.correct)/\(bestGame.total) (\(bestGame.date.dateTimeString))
+            Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
+            """
         
         return resultMessage
     }

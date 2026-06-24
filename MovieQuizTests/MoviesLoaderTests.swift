@@ -18,7 +18,7 @@ class MoviesLoaderTests: XCTestCase {
                 XCTAssertEqual(movies.items.count, 4)
                 expectation.fulfill()
                 
-            case .failure(_):
+            case .failure:
                 XCTFail("Unexpected failure")
             }
         }

@@ -11,16 +11,16 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - Properties
-    private var presenter:MovieQuizPresenter!
+    private var presenter:MovieQuizPresenter?
     private var alertPresenter = AlertPresenter()
     
     // MARK: - Actions
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        presenter.noButtonClicked()
+        presenter?.noButtonClicked()
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        presenter.yesButtonClicked()
+        presenter?.yesButtonClicked()
     }
     
     // MARK: - Lifecycle
@@ -48,7 +48,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         
         imageView.layer.borderWidth = 0
         
-        imageView.image = UIImage(data:step.image) ?? UIImage()
+        imageView.image = UIImage(data:step.imageData) ?? UIImage()
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
         
@@ -62,7 +62,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             buttonText: result.buttonText
         ) { [weak self] in
             guard let self = self else { return }
-            self.presenter.restartGame()
+            self.presenter?.restartGame()
         }
         alertPresenter.showAlert(on: self, model: model)
     }
@@ -87,7 +87,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
             guard let self = self else {return}
             
             self.showLoadingIndicator()
-            self.presenter.restartGame()
+            self.presenter?.restartGame()
         }
         alertPresenter.showAlert(on: self, model: model)
     }
